@@ -1,4 +1,11 @@
-# standard error function
+#chamber label function--------------------------------------------------------------------------------
+chlab_func <- function(x){
+  x$chamber <- ifelse(x$chamber <= 9, paste("0", x$chamber, sep=""), x$chamber)
+  x$chamber <- paste("ch", x$chamber, sep="")
+  return(x)
+}
+
+# standard error function--------------------------------------------------------------------------------
 se <- function(x) sd(x)/sqrt(length(x))
 
 #bar plot function--------------------------------------------------------------------------------
@@ -174,4 +181,17 @@ parformat <- function(df) {
 #extract summary data---------------------------------------------------------------
 getp <- function(x)x$p.value
 getdiffmean <- function(m)m$estimate
+
+
+#adds campaign Date and orders by ID and Date-------------------------------------------------------------
+add_Month<- function(x){
+  
+  x$Month <-ifelse(x$campaign == 1, "Oct", x$campaign)
+  x$Month <-ifelse(x$campaign == 2, "Dec", x$Month )
+  x$Month <-ifelse(x$campaign == 3, "Jan", x$Month )
+  x$Month <-ifelse(x$campaign == 4, "Feb", x$Month )
+  x$Month <-ifelse(x$campaign == 5, "Mar", x$Month )
+  x$Month <-ifelse(x$campaign == 6, "Apr", x$Month )
+  return(x)
+}
 
