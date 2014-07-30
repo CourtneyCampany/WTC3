@@ -1,6 +1,7 @@
 source("functions and packages/functions.R")
 source("functions and packages/packages.R")
 treat <- read.csv("raw data/temp_trt.csv")
+#add temp treatmetn
 
 #read and formate leaf water potential---------------------------------------------------------------
 leafdata <- read.csv("raw data/leaf_data.csv")
