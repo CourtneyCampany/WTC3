@@ -23,17 +23,62 @@ WP <- wptrt_func(wp_day)
 
 #read in licor data and extract transpiration-----------------------------------------------------------------------
 licor <- read.csv("raw data/licor_master.csv")
+#there is a extra space somewhere wiht "shade", use str_trim
+library(stringr)
+licor$leaf <- str_trim(licor$leaf)
 
 transp <- subset(licor, select = c("campaign", "chamber", "leaf", "PAR", "Trmmol"))
   transp <- chlab_func(transp)
   transp <- add_Month(transp)
 
 transp_agg <- summaryBy(Trmmol ~ Month +chamber+leaf+PAR, data= transp, FUN=c(mean), keep.names=TRUE)
-transp_agg$leaf <- as.character(transp_agg$leaf)
+transp_agg$id <- paste(transp_agg$leaf, transp_agg$PAR, sep="-")
 
 #remove shade high
-leafK <- subset(transp_agg, transp_agg$leaf != "shade")
-
-leafK <- subset(transp_agg, transp_agg$leaf != "shade" & transp_agg$PAR != "high")
-
+leafK <- subset(transp_agg, transp_agg$id !=  "shade-high")
 #format transp dfr to match that of WP
+  leafK$Month <- as.factor(leafK$Month)
+  leafK$chamber<- as.factor(leafK$chamber)
+  leafK$leaf<- as.factor(leafK$leaf)
+
+#merge
+leafcond <- merge(leafK[,c(1:3, 5)], WP)
+  leafcond$drydown <- as.factor(leafcond$drydown)
+
+leafcond$leafK <- with(leafcond, Trmmol/(pre-mid))
+
+  Morder <- c("Oct", "Dec", "Jan", "Feb", "Mar", "Apr")
+  leafcond$Month <- factor(leafcond$Month, levels = Morder)
+
+
+windows()
+bar(leafK, c(leaf, Month), leafcond, col=c("yellowgreen", "green4"), ylim=c(-0.5, 0),half.errbar=FALSE)
+abline(h=0)
+dev.off()
+
+
+leafK_ambT<- subset(leafcond, temp == "ambient")
+windows()
+bar(leafK, c(leaf, Month), leafK_ambT, col=c("yellowgreen", "green4"),  ylim=c(-0.5, 0),half.errbar=FALSE)
+title(main="ambient Temperature")
+
+
+leafK_eleT<- subset(leafcond, temp == "elevated")
+windows()
+bar(leafK, c(leaf, Month), leafK_eleT, col=c("yellowgreen", "green4"), ylim=c(-0.5, 0),half.errbar=FALSE)
+title(main="elevated Temperature")
+
+
+
+leafKdrought <- subset(leafcond, Month %in% c("Mar", "Apr"))
+windows()
+bar(leafK, c(leaf, drydown), leafKdrought, col=c("yellowgreen", "green4"), ylim=c(-0.5, 0),half.errbar=FALSE)
+dev.off()
+
+
+leafK_nodrought <- subset(leafcond, drydown != "drought")
+bar(leafK, c(leaf, Month), leafK_nodrought, col=c("yellowgreen", "green4"),ylim=c(-0.5, 0),half.errbar=FALSE)
+
+
+#look for bad data in Jan (could be low trmmol)
+leafjan <- subset(leafcond, Month == "Jan" & leaf == "sun")
