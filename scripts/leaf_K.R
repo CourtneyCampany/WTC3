@@ -1,7 +1,6 @@
 source("functions and packages/functions.R")
 source("functions and packages/packages.R")
 treat <- read.csv("raw data/temp_trt.csv")
-#add temp treatmetn
 
 #read and formate leaf water potential---------------------------------------------------------------
 leafdata <- read.csv("raw data/leaf_data.csv")
@@ -46,39 +45,37 @@ leafK <- subset(transp_agg, transp_agg$id !=  "shade-high")
 leafcond <- merge(leafK[,c(1:3, 5)], WP)
   leafcond$drydown <- as.factor(leafcond$drydown)
 
-leafcond$leafK <- with(leafcond, Trmmol/(pre-mid))
-
+leafcond$leafK <- with(leafcond, Trmmol/(mid-pre))
   Morder <- c("Oct", "Dec", "Jan", "Feb", "Mar", "Apr")
   leafcond$Month <- factor(leafcond$Month, levels = Morder)
 
-
-windows()
-bar(leafK, c(leaf, Month), leafcond, col=c("yellowgreen", "green4"), ylim=c(-0.5, 0),half.errbar=FALSE)
-abline(h=0)
-dev.off()
-
-
+###different data substs
 leafK_ambT<- subset(leafcond, temp == "ambient")
-windows()
-bar(leafK, c(leaf, Month), leafK_ambT, col=c("yellowgreen", "green4"),  ylim=c(-0.5, 0),half.errbar=FALSE)
-title(main="ambient Temperature")
-
-
 leafK_eleT<- subset(leafcond, temp == "elevated")
-windows()
-bar(leafK, c(leaf, Month), leafK_eleT, col=c("yellowgreen", "green4"), ylim=c(-0.5, 0),half.errbar=FALSE)
-title(main="elevated Temperature")
-
-
-
 leafKdrought <- subset(leafcond, Month %in% c("Mar", "Apr"))
-windows()
-bar(leafK, c(leaf, drydown), leafKdrought, col=c("yellowgreen", "green4"), ylim=c(-0.5, 0),half.errbar=FALSE)
-dev.off()
-
-
 leafK_nodrought <- subset(leafcond, drydown != "drought")
-bar(leafK, c(leaf, Month), leafK_nodrought, col=c("yellowgreen", "green4"),ylim=c(-0.5, 0),half.errbar=FALSE)
+
+windows()
+bar(leafK, c(leaf, Month), leafcond, col=c("yellowgreen", "green4"), ylim=c(0, .5),xlab="", 
+    ylab="Leaf Hydraulic Conductance",half.errbar=FALSE)
+
+
+windows()
+par(mfrow=c(2,1),  omi=c(1,0,0.1,0.1), mar=c(0,7,0,0))   
+bar(leafK, c(leaf, Month), data=leafK_ambT,col=c("yellowgreen", "green4"), ylim=c(0, .5),
+    xlab="", ylab = "", half.errbar=FALSE)
+  title(main="ambient Temperature", line=-1)
+bar(leafK, c(leaf, Month), leafK_eleT, col=c("yellowgreen", "green4"), ylim=c(0, .5),half.errbar=FALSE)
+  title(main="elevated Temperature", line=-1)
+
+
+windows()
+bar(leafK, c(leaf, drydown), leafKdrought, col=c("yellowgreen", "green4"), ylim=c(0, .5),half.errbar=FALSE)
+title(main="Drought", line=-1)
+
+
+bar(leafK, c(leaf, Month), leafK_nodrought, col=c("yellowgreen", "green4"),ylim=c(0, .5),half.errbar=FALSE)
+title(main="Well Watered", line=-1)
 
 
 #look for bad data in Jan (could be low trmmol)
