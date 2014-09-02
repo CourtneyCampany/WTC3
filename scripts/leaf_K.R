@@ -55,28 +55,41 @@ leafK_eleT<- subset(leafcond, temp == "elevated")
 leafKdrought <- subset(leafcond, Month %in% c("Mar", "Apr"))
 leafK_nodrought <- subset(leafcond, drydown != "drought")
 
-windows()
+#plotting--------------------------------------------------------------------------------------
+ypos <- c(2.5,1,0)
+leafK_lab <- expression(Leaf-specific~Hydraulic~Conducatuce~~(mmol~H[2]*O~m^-2~s^-1~MPa^-1))
+
+#all data no treatments
 bar(leafK, c(leaf, Month), leafcond, col=c("yellowgreen", "green4"), ylim=c(0, .5),xlab="", 
-    ylab="Leaf Hydraulic Conductance",half.errbar=FALSE)
+    ylab="",half.errbar=FALSE)
+ 
 
-
-windows()
-par(mfrow=c(2,1),  omi=c(1,0,0.1,0.1), mar=c(0,7,0,0))   
-bar(leafK, c(leaf, Month), data=leafK_ambT,col=c("yellowgreen", "green4"), ylim=c(0, .5),
+#split et and at 
+bar(leafK, c(leaf, Month), data=leafK_ambT,col=c("yellowgreen", "green4"),ylim=c(0, .5),
     xlab="", ylab = "", half.errbar=FALSE)
-  title(main="ambient Temperature", line=-1)
-bar(leafK, c(leaf, Month), leafK_eleT, col=c("yellowgreen", "green4"), ylim=c(0, .5),half.errbar=FALSE)
-  title(main="elevated Temperature", line=-1)
+  title(main="Ambient Temperature", line=-1, adj=0.05, cex.main=1)
+  title(ylab=leafK_lab, mgp=ypos)
 
+bar(leafK, c(leaf, Month), leafK_eleT, col=c("yellowgreen", "green4"), ylim=c(0, .5),
+    xlab="", ylab = "",half.errbar=FALSE)
+    title(main="Elevated Temperature", line=-1, adj=0.05, cex.main=1)
+    title(ylab=leafK_lab, mgp=ypos)
 
-windows()
-bar(leafK, c(leaf, drydown), leafKdrought, col=c("yellowgreen", "green4"), ylim=c(0, .5),half.errbar=FALSE)
-title(main="Drought", line=-1)
+#Drought trees
+bar(leafK, c(leaf, drydown), leafKdrought, col=c("yellowgreen", "green4"), ylim=c(0, .5),
+    half.errbar=FALSE, ylab="")
+  title(main="Drought", line=-1, adj=0.05, cex.main=1)
+  title(ylab=leafK_lab, mgp=ypos)
 
-
+#well watered trees
 bar(leafK, c(leaf, Month), leafK_nodrought, col=c("yellowgreen", "green4"),ylim=c(0, .5),half.errbar=FALSE)
-title(main="Well Watered", line=-1)
+  title(main="Well Watered", line=-1)
+  title(ylab=leafK_lab, mgp=ypos)
 
-
-#look for bad data in Jan (could be low trmmol)
-leafjan <- subset(leafcond, Month == "Jan" & leaf == "sun")
+#-----------------------------------------------------------------------------------------------------------------
+#look for bad data in Jan
+sunjan <- subset(leafcond, Month == "Jan" & leaf == "sun")
+shajan <- subset(leafcond, Month == "Jan" & leaf == "shade")
+####bad data
+#sun- jan = ch2 midday wp really high, ch8/5 transpiration low
+#sha - jan = ch 9/2 transpiration too high
