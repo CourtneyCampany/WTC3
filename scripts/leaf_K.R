@@ -88,8 +88,12 @@ bar(leafK, c(leaf, Month), leafK_nodrought, col=c("yellowgreen", "green4"),ylim=
 
 #-----------------------------------------------------------------------------------------------------------------
 #look for bad data in Jan
+Ejan <- subset(transp, Month == "Jan")
 sunjan <- subset(leafcond, Month == "Jan" & leaf == "sun")
 shajan <- subset(leafcond, Month == "Jan" & leaf == "shade")
 ####bad data
 #sun- jan = ch2 midday wp really high, ch8/5 transpiration low
 #sha - jan = ch 9/2 transpiration too high
+
+
+
