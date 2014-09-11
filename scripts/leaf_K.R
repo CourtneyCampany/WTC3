@@ -58,9 +58,13 @@ leafcond2 <- droplevels(leafcond2)
 
 ###different data substs
 leafK_ambT<- subset(leafcond, temp == "ambient")
+  leafK_ambT <- droplevels(leafK_ambT)
 leafK_eleT<- subset(leafcond, temp == "elevated")
+  leafK_eleT <- droplevels(leafK_eleT)
 leafKdrought <- subset(leafcond, Month %in% c("Mar", "Apr"))
+  leafKdrought <- droplevels(leafKdrought)
 leafK_nodrought <- subset(leafcond, drydown != "drought")
+  leafK_nodrought <- droplevels(leafK_nodrought)
 
 #plotting--------------------------------------------------------------------------------------
 ypos <- c(2.5,1,0)
@@ -90,8 +94,8 @@ bar(leafK, c(leaf, drydown), leafKdrought, col=c("yellowgreen", "green4"), ylim=
   title(ylab=leafK_lab, mgp=ypos)
 
 #well watered trees
-bar(leafK, c(leaf, Month), leafK_nodrought, col=c("yellowgreen", "green4"),ylim=c(0, .5),half.errbar=FALSE)
-  title(main="Well Watered", line=-1)
+bar(leafK, c(leaf, Month), leafK_nodrought, col=c("yellowgreen", "green4"),ylim=c(0, .5),half.errbar=FALSE, ylab="")
+  title(main="Well Watered", line=-1, adj=0.05, cex.main=1)
   title(ylab=leafK_lab, mgp=ypos)
 
 #-----------------------------------------------------------------------------------------------------------------
