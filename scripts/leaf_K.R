@@ -49,6 +49,13 @@ leafcond$leafK <- with(leafcond, Trmmol/(mid-pre))
   Morder <- c("Oct", "Dec", "Jan", "Feb", "Mar", "Apr")
   leafcond$Month <- factor(leafcond$Month, levels = Morder)
 
+#need to remove ch 10 in march (in complete dataset)
+leafcond2 <- subset(leafcond, Month != "Mar" & chamber != "ch10")
+
+leafcond2 <- droplevels(leafcond2)
+
+#write.csv(leafcond, "calculated data/leaf_conductance.csv", row.names=FALSE)
+
 ###different data substs
 leafK_ambT<- subset(leafcond, temp == "ambient")
 leafK_eleT<- subset(leafcond, temp == "elevated")
@@ -60,7 +67,8 @@ ypos <- c(2.5,1,0)
 leafK_lab <- expression(Leaf-specific~Hydraulic~Conducatuce~~(mmol~H[2]*O~m^-2~s^-1~MPa^-1))
 
 #all data no treatments
-bar(leafK, c(leaf, Month), leafcond, col=c("yellowgreen", "green4"), ylim=c(0, .5),xlab="", 
+windows()
+bar(leafK, c(leaf, Month), leafcond2, col=c("yellowgreen", "green4"), ylim=c(0, .5),xlab="", 
     ylab="",half.errbar=FALSE)
  
 
