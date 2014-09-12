@@ -49,22 +49,26 @@ leafcond$leafK <- with(leafcond, Trmmol/(mid-pre))
   Morder <- c("Oct", "Dec", "Jan", "Feb", "Mar", "Apr")
   leafcond$Month <- factor(leafcond$Month, levels = Morder)
 
-#need to remove ch 10 in march (in complete dataset)
-leafcond2 <- subset(leafcond, Month != "Mar" & chamber != "ch10")
-
-leafcond2 <- droplevels(leafcond2)
-
 #write.csv(leafcond, "calculated data/leaf_conductance.csv", row.names=FALSE)
 
-###different data substs
-leafK_ambT<- subset(leafcond, temp == "ambient")
-  leafK_ambT <- droplevels(leafK_ambT)
-leafK_eleT<- subset(leafcond, temp == "elevated")
-  leafK_eleT <- droplevels(leafK_eleT)
-leafKdrought <- subset(leafcond, Month %in% c("Mar", "Apr"))
-  leafKdrought <- droplevels(leafKdrought)
-leafK_nodrought <- subset(leafcond, drydown != "drought")
-  leafK_nodrought <- droplevels(leafK_nodrought)
+#bad data and missing value cleaning
+
+  #need to remove ch 10 in march (in complete dataset)
+  leafcond2 <- subset(leafcond,  chamber != "ch10" | Month != "Mar")
+  leafcond2 <- droplevels(leafcond2)
+  #remove jan ch08, possible bad data for sun leaf (really low A and gs)
+  leafcond3 <- subset(leafcond2, Month != "Jan" | chamber != "ch08")
+
+
+###treatment data subsets
+leafK_ambT<- subset(leafcond3, temp == "ambient")
+
+leafK_eleT<- subset(leafcond3, temp == "elevated")
+
+leafKdrought <- subset(leafcond3, Month %in% c("Mar", "Apr"))
+
+leafK_nodrought <- subset(leafcond3, drydown != "drought")
+
 
 #plotting--------------------------------------------------------------------------------------
 ypos <- c(2.5,1,0)
@@ -72,7 +76,7 @@ leafK_lab <- expression(Leaf-specific~Hydraulic~Conducatuce~~(mmol~H[2]*O~m^-2~s
 
 #all data no treatments
 windows()
-bar(leafK, c(leaf, Month), leafcond2, col=c("yellowgreen", "green4"), ylim=c(0, .5),xlab="", 
+bar(leafK, c(leaf, Month), leafcond3, col=c("yellowgreen", "green4"), ylim=c(0, .5),xlab="", 
     ylab="",half.errbar=FALSE)
  
 
