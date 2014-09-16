@@ -4,6 +4,8 @@ source("functions and packages/packages.R")
 source("scripts/plot_objects_paired.R")
 
 
+###there is no ch10 shade in march, check for this in script and paired comparisons
+
 #read in gmsunsha
 #gm data, no drought, no shade high
 gm<- read.csv("calculated data/gm_sunsha.csv")

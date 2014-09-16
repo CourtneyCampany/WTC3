@@ -4,6 +4,8 @@ source("scripts/read_data.R")
 source("scripts/plot_objects.R")
 
 
+###there is no ch10 shade in march, check for this in script and paired comparisons
+
 #gm data, no drought, no shade high
 gmes <- read.csv("calculated data/gm_sunsha.csv")
 
