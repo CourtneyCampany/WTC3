@@ -75,10 +75,14 @@ ypos <- c(2.5,1,0)
 leafK_lab <- expression(Leaf-specific~Hydraulic~Conducatuce~~(mmol~H[2]*O~m^-2~s^-1~MPa^-1))
 
 #all data no treatments
-windows()
+
+pdf(file="output/leafK_all.pdf", onefile=TRUE) 
+
+#windows()
 bar(leafK, c(leaf, Month), leafcond3, col=c("yellowgreen", "green4"), ylim=c(0, .5),xlab="", 
     ylab="",half.errbar=FALSE)
- 
+  title(main="all data", line=-1, adj=0.05, cex.main=1)
+  title(ylab=leafK_lab, mgp=ypos)
 
 #split et and at 
 bar(leafK, c(leaf, Month), data=leafK_ambT,col=c("yellowgreen", "green4"),ylim=c(0, .5),
@@ -91,17 +95,19 @@ bar(leafK, c(leaf, Month), leafK_eleT, col=c("yellowgreen", "green4"), ylim=c(0,
     title(main="Elevated Temperature", line=-1, adj=0.05, cex.main=1)
     title(ylab=leafK_lab, mgp=ypos)
 
-#Drought trees
-bar(leafK, c(leaf, drydown), leafKdrought, col=c("yellowgreen", "green4"), ylim=c(0, .5),
-    half.errbar=FALSE, ylab="")
-  title(main="Drought", line=-1, adj=0.05, cex.main=1)
-  title(ylab=leafK_lab, mgp=ypos)
-
 #well watered trees
-bar(leafK, c(leaf, Month), leafK_nodrought, col=c("yellowgreen", "green4"),ylim=c(0, .5),half.errbar=FALSE, ylab="")
+bar(leafK, c(leaf, Month), leafK_nodrought, col=c("yellowgreen", "green4"),ylim=c(0, .5),half.errbar=FALSE, 
+    xlab="",ylab="")
   title(main="Well Watered", line=-1, adj=0.05, cex.main=1)
   title(ylab=leafK_lab, mgp=ypos)
 
+#Drought trees
+bar(leafK, c(leaf, drydown), leafKdrought, col=c("yellowgreen", "green4"), ylim=c(0, .5),
+    half.errbar=FALSE, ylab="", xlab="")
+title(main="Drought", line=-1, adj=0.05, cex.main=1)
+title(ylab=leafK_lab, mgp=ypos)
+
+dev.off() 
 #-----------------------------------------------------------------------------------------------------------------
 #look for bad data in Jan
 Ejan <- subset(transp, Month == "Jan")
