@@ -11,7 +11,8 @@ sunaci <- read.csv("raw data/sunaci.csv")
 tdlaci2 <- read.csv("raw data/tdlaci2.csv")
 #read plot summary
 plotsumm <- read.csv("raw data/chamber_trt.csv")
-
+plotsumm$chamber <- as.numeric(plotsumm$chamber)
+plotsumm <- chlab_func(plotsumm)
 
 #fit curves for shade leaves
 shadefit<-fitacis(acishade, "chamber", varnames = list(ALEAF="Photo", Tleaf = "Tleaf", Ci="Ci", PPFD="PARi"), 
@@ -59,12 +60,21 @@ sun_coefs <- sun_coefs[chamberorder,]
 #write a df with coefs for sun and shade leaves
 tdlaci <- rbind(sun_coefs, shade_coefs)
 tdlaci <- merge(tdlaci, plotsumm, by = "chamber")
-write.csv(tdlaci, "calculated data/tdl_aci.csv", row.names=FALSE)
+test <- tdlaci[-c(8, 13),]
+
+write.csv(test, "calculated_data/aciparameters.csv", row.names=FALSE)
+
+aci_means2 <- summaryBy(Vcmax+Jmax ~ leaf , data = tdlaci,  FUN=c(mean,se))
 
 
 #generate treatment means for vcmax and jmax
-aci_means <- summaryBy(Vcmax+Jmax ~ leaf+temp , data = tdlaci,  FUN=c(mean,se))
+aci_means <- summaryBy(Vcmax+Jmax+Rd ~ leaf+temp , data = tdlaci,  FUN=c(mean,se))
+write.csv(aci_means, "calculated_data/tdl_aci.csv", row.names=FALSE)
 bar(Vcmax, c(temp, leaf), tdlaci)
 bar(Jmax, c(temp, leaf), tdlaci)
+
+#generate mean of sun and shade obly
+aci_sunsha <- summaryBy(Vcmax+Jmax ~ leaf , data = tdlaci,  FUN=c(mean,se))
+write.csv(aci_sunsha, "calculated_data/aci_sunsha.csv", row.names=FALSE)
 
 

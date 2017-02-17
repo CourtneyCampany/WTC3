@@ -1,4 +1,4 @@
 WTC3
 ====
 
-all data from whole tree chamber III
+This is the ACi curve data from WTC3 combined with mesophyll conductance.  We will attempt to find solutions for ACc curves
